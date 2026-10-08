@@ -10,7 +10,7 @@ const { randomUUID } = require('crypto');
 const KEY = 'halloween:pups';
 const MAX_NAME = 12;
 const COATS = ['black', 'brown', 'white'];
-const BREEDS = ['corgi', 'mixed', 'shiba', 'frenchie', 'bichon', 'akita', 'poodle'];
+const BREEDS = ['corgi', 'mixed', 'shiba', 'frenchie', 'bichon', 'akita', 'poodle', 'golden'];
 
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
