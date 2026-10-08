@@ -357,6 +357,19 @@
       ...eyes(10, 12),
       ...nose(17),
     ],
+    schnauzer: (p) => [
+      ...body(p),
+      { f: T(7, 10, 8, 4, 12, 9), c: p.fur },         // folded ears
+      { f: T(25, 10, 24, 4, 20, 9), c: p.fur },
+      { f: E(16, 14, 9.5, 8.5), c: p.fur },           // head
+      { f: R(7, 13, 25, 20), c: p.fur },              // boxy cheeks
+      { f: E(11.5, 10.5, 2.5, 1.2), c: p.dark },      // bushy eyebrows
+      { f: E(20.5, 10.5, 2.5, 1.2), c: p.dark },
+      { f: E(16, 19.5, 4.5, 3), c: p.light },         // muzzle
+      { f: E(16, 24.5, 6, 3.5), c: p.light },         // beard
+      ...eyes(11, 13),
+      ...nose(17, 4),
+    ],
   };
 
   // Paints a breed/coat combo onto a canvas. Canvas is W x W pixels; CSS scales it up.
@@ -417,6 +430,7 @@
     { id: 'akita', label: '秋田 Akita' },
     { id: 'poodle', label: 'Poodle' },
     { id: 'golden', label: '金毛 Golden' },
+    { id: 'schnauzer', label: '史納莎 Schnauzer' },
   ];
 
   const $ = (id) => document.getElementById(id);
