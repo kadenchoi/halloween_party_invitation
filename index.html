@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Halloween Pet Party 🎃</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --night: #140b24;
+      --panel: #24143f;
+      --ink: #fff3d6;
+      --muted: #c4b3e6;
+      --orange: #ff8a1f;
+      --yellow: #ffe49a;
+      --line: #0b0614;
+    }
+    [hidden] { display: none !important; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      min-height: 100vh;
+      font-family: 'VT323', 'PingFang TC', 'Microsoft JhengHei', monospace;
+      font-size: 22px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12px 14px, #fff 1px, transparent 2px) 0 0 / 180px 140px,
+        radial-gradient(circle at 96px 70px, var(--yellow) 1px, transparent 2px) 0 0 / 180px 140px,
+        radial-gradient(circle at 150px 120px, #fff 1px, transparent 2px) 0 0 / 180px 140px,
+        linear-gradient(180deg, #140b24 0%, #2b1656 75%, #3d2068 100%);
+    }
+
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 24px 18px 80px; }
+    header { text-align: center; padding: 14px 0 26px; }
+    .kicker { margin: 0; color: var(--orange); font-size: 26px; }
+    h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-weight: normal;
+      font-size: clamp(20px, 5vw, 38px);
+      line-height: 1.5;
+      margin: 14px 0 22px;
+      color: var(--yellow);
+      text-shadow: 0 5px 0 #b4481a, 0 0 24px rgba(255, 180, 60, .35);
+    }
+    .info { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .chip {
+      background: var(--panel);
+      border: 3px solid var(--line);
+      box-shadow: 0 4px 0 var(--line);
+      padding: 4px 12px;
+    }
+    .invite { margin: 0 0 24px; color: var(--muted); }
+    .count { margin: 0 0 18px; color: var(--yellow); }
+
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #1a0b00;
+      background: var(--orange);
+      border: 0;
+      padding: 16px 20px;
+      cursor: pointer;
+      box-shadow: 0 0 0 3px var(--line), 0 6px 0 3px var(--line);
+    }
+    .btn:hover { background: #ffa347; }
+    .btn:active { transform: translateY(4px); box-shadow: 0 0 0 3px var(--line), 0 2px 0 3px var(--line); }
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .btn.ghost { background: var(--panel); color: var(--ink); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 3px solid var(--line);
+      box-shadow: 0 6px 0 var(--line);
+      padding: 10px 10px 12px;
+      text-align: center;
+      animation: pop .4s steps(4) both;
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .portrait {
+      aspect-ratio: 1;
+      border: 3px solid var(--line);
+      background: radial-gradient(circle, #ffe9a8 0 40%, #ff9a3c 40% 72%, #b8502a 72%);
+    }
+    .portrait canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      image-rendering: pixelated;
+    }
+    .card h3 {
+      margin: 10px 0 2px;
+      font-weight: normal;
+      font-size: 26px;
+      overflow-wrap: anywhere;
+    }
+    .meta { margin: 0; color: var(--muted); font-size: 19px; }
+    .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+    .status { text-align: center; color: #ff9a6b; min-height: 1.2em; }
+
+    dialog {
+      width: min(560px, 94vw);
+      max-height: 92vh;
+      padding: 22px;
+      color: var(--ink);
+      background: var(--panel);
+      border: 4px solid var(--line);
+      box-shadow: 0 0 0 4px var(--orange), 0 10px 0 4px var(--line);
+      font: inherit;
+    }
+    dialog::backdrop { background: rgba(8, 3, 16, .75); }
+    dialog h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-weight: normal;
+      font-size: 16px;
+      color: var(--yellow);
+      margin: 0 0 18px;
+    }
+    .preview-row { display: flex; gap: 18px; align-items: center; }
+    .preview-row .portrait { width: 150px; flex: none; }
+    .field { flex: 1; display: grid; gap: 6px; }
+    .field small { color: var(--muted); }
+    #pupName {
+      font: inherit;
+      font-size: 26px;
+      color: var(--ink);
+      background: var(--night);
+      border: 3px solid var(--line);
+      padding: 8px 10px;
+      width: 100%;
+    }
+    .label { margin: 18px 0 8px; color: var(--muted); }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+    .tile { position: relative; cursor: pointer; }
+    .tile input { position: absolute; opacity: 0; pointer-events: none; }
+    .tile span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 6px 8px;
+      text-align: center;
+      line-height: 1.1;
+      background: var(--night);
+      border: 3px solid var(--line);
+      box-shadow: 0 3px 0 var(--line);
+    }
+    .tile:hover span { background: #2e1b52; }
+    .tile input:checked + span { background: var(--orange); color: #1a0b00; }
+    .tile input:focus-visible + span { outline: 3px dashed var(--yellow); outline-offset: 3px; }
+    .swatch { display: inline-block; width: 18px; height: 18px; border: 3px solid var(--line); }
+    .error { color: #ff9a6b; min-height: 1.3em; margin: 14px 0 0; }
+    .actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 10px; }
+
+    @media (max-width: 480px) {
+      .preview-row { flex-direction: column; }
+      .preview-row .portrait { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="kicker">You're invited 🦇</p>
+      <h1>HALLOWEEN<br />PET PARTY</h1>
+      <div class="info">
+        <span class="chip">📅 Sat, Oct 31</span>
+        <span class="chip">🕕 Time: TBD</span>
+        <span class="chip">📍 Sam's Roof Floor</span>
+      </div>
+      <p class="invite">Bring your pup, a treat, and a spooky costume. 🦴👻</p>
+      <p class="count" id="count">🐾 Loading pups...</p>
+      <button class="btn" id="openJoin" type="button">+ Join the party</button>
+    </header>
+
+    <main>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>No pups yet. Be the first to join! 🎃</p>
+      <p class="status" id="status"></p>
+    </main>
+  </div>
+
+  <dialog id="joinDialog">
+    <form id="joinForm" autocomplete="off">
+      <h2>JOIN THE PARTY</h2>
+      <div class="preview-row">
+        <div class="portrait"><canvas id="preview" width="32" height="32"></canvas></div>
+        <div class="field">
+          <label for="pupName">Pup name</label>
+          <input id="pupName" name="pupName" type="text" maxlength="12" placeholder="e.g. Mochi" required />
+          <small>Up to 12 characters</small>
+        </div>
+      </div>
+
+      <p class="label">Coat color</p>
+      <div class="tiles" id="coatTiles"></div>
+
+      <p class="label">Breed</p>
+      <div class="tiles" id="breedTiles"></div>
+
+      <p class="error" id="formError" role="alert"></p>
+      <div class="actions">
+        <button class="btn ghost" id="cancelBtn" type="button">Cancel</button>
+        <button class="btn" id="submitBtn" type="submit">Join 🐾</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+  // ---SPRITES---
+  // Procedural pixel dogs: each breed is a list of shapes painted in layers.
+  // The outline is generated automatically around the silhouette.
+  const W = 32;
+  const OUTLINE = '#140f1c';
+  const EYE = '#0c0a10';
+  const NOSE = '#0c0a10';
+  const COLLAR = '#ff7a1a';
+  const BELL = '#ffd23f';
+
+  const PALETTES = {
+    black: { fur: '#3b3442', light: '#6e6679', dark: '#221d28', inner: '#8c6279' },
+    brown: { fur: '#a86a3c', light: '#dc9d66', dark: '#6b3f22', inner: '#eeb496' },
+    white: { fur: '#f5f0e6', light: '#ffffff', dark: '#cbbda8', inner: '#f6b9bb' },
+  };
+
+  // Shape helpers: each returns a test (x, y) => boolean for one pixel.
+  const E = (cx, cy, rx, ry) => (x, y) => ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1;
+  const R = (x0, y0, x1, y1) => (x, y) => x >= x0 && x < x1 && y >= y0 && y < y1;
+  const T = (ax, ay, bx, by, cx, cy) => (x, y) => {
+    const px = x + 0.5, py = y + 0.5;
+    const side = (x1, y1, x2, y2) => (px - x2) * (y1 - y2) - (x1 - x2) * (py - y2);
+    const d1 = side(ax, ay, bx, by), d2 = side(bx, by, cx, cy), d3 = side(cx, cy, ax, ay);
+    return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
+  };
+
+  // Shared parts. sil:false means the layer paints color but doesn't add to the silhouette.
+  const eyes = (a, y) => [
+    { f: R(a, y, a + 2, y + 2), c: EYE, sil: false },
+    { f: R(30 - a, y, 32 - a, y + 2), c: EYE, sil: false },
+    { f: R(a, y, a + 1, y + 1), c: '#ffffff', sil: false },
+    { f: R(30 - a, y, 31 - a, y + 1), c: '#ffffff', sil: false },
+  ];
+  const nose = (y, w = 4) => [{ f: R(16 - w / 2, y, 16 + w / 2, y + 2), c: NOSE, sil: false }];
+  const body = (p) => [
+    { f: E(16, 29, 10, 6), c: p.fur },
+    { f: R(9, 24, 23, 27), c: COLLAR },
+    { f: E(16, 27.5, 1.5, 1.5), c: BELL },
+  ];
+
+  const SHAPES = {
+    corgi: (p) => [
+      ...body(p),
+      { f: T(5, 13, 6, 1, 14, 9), c: p.fur },
+      { f: T(27, 13, 26, 1, 18, 9), c: p.fur },
+      { f: E(16, 15, 9.5, 8), c: p.fur },
+      { f: T(7, 10, 7, 4, 12, 9), c: p.inner },
+      { f: T(25, 10, 25, 4, 20, 9), c: p.inner },
+      { f: E(16, 21, 5, 3), c: p.light },
+      ...eyes(10, 13),
+      ...nose(17),
+    ],
+    mixed: (p) => [
+      ...body(p),
+      { f: E(6.5, 15, 3, 5.5), c: p.fur },            // floppy ear
+      { f: T(21, 10, 25, 1, 28, 12), c: p.fur },      // upright ear
+      { f: E(16, 15, 9, 8), c: p.fur },
+      { f: T(22, 9, 25, 4, 27, 10), c: p.inner },
+      { f: E(22, 13, 2.8, 2.8), c: p.dark },          // patch
+      { f: E(16, 21, 4.5, 3), c: p.light },
+      ...eyes(10, 13),
+      ...nose(17),
+    ],
+    shiba: (p) => [
+      ...body(p),
+      { f: T(7, 12, 8, 2, 15, 8), c: p.fur },
+      { f: T(25, 12, 24, 2, 17, 8), c: p.fur },
+      { f: E(16, 15, 9, 8), c: p.fur },
+      { f: E(7, 21, 3, 3), c: p.light },              // cheek ruffs
+      { f: E(25, 21, 3, 3), c: p.light },
+      { f: T(9, 10, 9, 5, 13, 8), c: p.inner },
+      { f: T(23, 10, 23, 5, 19, 8), c: p.inner },
+      { f: E(16, 21, 5, 3.2), c: p.light },
+      ...eyes(11, 12),
+      ...nose(17),
+    ],
+    frenchie: (p) => [
+      ...body(p),
+      { f: E(8, 7, 3.6, 5.5), c: p.fur },             // bat ears
+      { f: E(24, 7, 3.6, 5.5), c: p.fur },
+      { f: E(8, 7.5, 1.8, 3.5), c: p.inner },
+      { f: E(24, 7.5, 1.8, 3.5), c: p.inner },
+      { f: E(16, 15, 10, 8.5), c: p.fur },
+      { f: E(16, 21, 5.5, 2.8), c: p.light },         // flat muzzle
+      ...eyes(8, 12),
+      ...nose(17, 6),
+    ],
+    bichon: (p) => [
+      ...body(p),
+      { f: E(16, 14, 11, 10), c: p.fur },             // fluffy round head
+      { f: E(5.5, 13, 3, 3.5), c: p.fur },
+      { f: E(26.5, 13, 3, 3.5), c: p.fur },
+      { f: E(9, 6, 3.2, 3), c: p.fur },
+      { f: E(23, 6, 3.2, 3), c: p.fur },
+      { f: E(16, 4, 4.5, 2.5), c: p.fur },
+      { f: E(13, 7, 4, 1.6), c: p.light },            // fluff highlight
+      { f: E(16, 21, 3.6, 2.4), c: p.light },
+      ...eyes(10, 13),
+      ...nose(18, 4),
+    ],
+    akita: (p) => [
+      ...body(p),
+      { f: T(7, 11, 9, 1, 14, 9), c: p.fur },         // small upright ears
+      { f: T(25, 11, 23, 1, 18, 9), c: p.fur },
+      { f: E(16, 15, 10, 8.5), c: p.fur },            // broad head
+      { f: E(6, 20, 3, 4), c: p.fur },                // fur ruff
+      { f: E(26, 20, 3, 4), c: p.fur },
+      { f: T(8, 9, 9, 4, 12, 8), c: p.inner },
+      { f: T(24, 9, 23, 4, 20, 8), c: p.inner },
+      { f: E(16, 21, 6, 3.6), c: p.light },
+      ...eyes(10, 13),
+      ...nose(18),
+    ],
+    poodle: (p) => [
+      ...body(p),
+      { f: E(6.5, 17, 3, 6), c: p.fur },              // long ears
+      { f: E(25.5, 17, 3, 6), c: p.fur },
+      { f: E(16, 15, 8.5, 8), c: p.fur },
+      { f: E(16, 6, 5.5, 4.5), c: p.fur },            // topknot
+      { f: E(10.5, 9, 2.2, 2.2), c: p.fur },          // curls
+      { f: E(21.5, 9, 2.2, 2.2), c: p.fur },
+      { f: E(12, 4.5, 2, 1.5), c: p.light },
+      { f: E(16, 21, 4, 2.8), c: p.light },
+      ...eyes(11, 13),
+      ...nose(18),
+    ],
+  };
+
+  // Paints a breed/coat combo onto a canvas. Canvas is W x W pixels; CSS scales it up.
+  function drawDog(canvas, coat, breed) {
+    const pal = PALETTES[coat] || PALETTES.brown;
+    const parts = (SHAPES[breed] || SHAPES.mixed)(pal);
+
+    const sil = new Uint8Array(W * W);
+    const col = new Array(W * W).fill(null);
+    for (const part of parts) {
+      for (let y = 0; y < W; y++) {
+        for (let x = 0; x < W; x++) {
+          if (!part.f(x, y)) continue;
+          const i = y * W + x;
+          if (part.sil !== false) sil[i] = 1;
+          col[i] = part.c;
+        }
+      }
+    }
+
+    const solid = (x, y) => x >= 0 && y >= 0 && x < W && y < W && sil[y * W + x] === 1;
+    canvas.width = W;
+    canvas.height = W;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, W);
+
+    for (let y = 0; y < W; y++) {
+      for (let x = 0; x < W; x++) {
+        const i = y * W + x;
+        let c = null;
+        if (sil[i]) {
+          c = col[i] || pal.fur;
+          if (c === pal.fur && y >= 27) c = pal.dark; // belly shade
+        } else if (solid(x + 1, y) || solid(x - 1, y) || solid(x, y + 1) || solid(x, y - 1)) {
+          c = OUTLINE;
+        }
+        if (c) {
+          ctx.fillStyle = c;
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+  }
+  // ---END SPRITES---
+
+  // ---------- UI ----------
+  const COAT_OPTIONS = [
+    { id: 'black', label: 'Black', swatch: '#3b3442' },
+    { id: 'brown', label: 'Brown', swatch: '#a86a3c' },
+    { id: 'white', label: 'White', swatch: '#f5f0e6' },
+  ];
+  const BREED_OPTIONS = [
+    { id: 'corgi', label: 'Corgi' },
+    { id: 'mixed', label: 'Mixed dog' },
+    { id: 'shiba', label: 'Shiba' },
+    { id: 'frenchie', label: '法鬥 Frenchie' },
+    { id: 'bichon', label: '比熊犬 Bichon' },
+    { id: 'akita', label: '秋田 Akita' },
+    { id: 'poodle', label: 'Poodle' },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const labelOf = (list, id) => (list.find((o) => o.id === id) || {}).label || id;
+  const grid = $('grid');
+  const form = $('joinForm');
+  const dialog = $('joinDialog');
+  const preview = $('preview');
+  const submitBtn = $('submitBtn');
+  const shown = new Map(); // id -> card element, so polling doesn't re-render everything
+
+  function buildTiles(container, name, options, defaultId) {
+    container.replaceChildren(...options.map((opt) => {
+      const label = document.createElement('label');
+      label.className = 'tile';
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = name;
+      input.value = opt.id;
+      input.defaultChecked = opt.id === defaultId; // defaultChecked survives form.reset()
+      const span = document.createElement('span');
+      if (opt.swatch) {
+        const sw = document.createElement('i');
+        sw.className = 'swatch';
+        sw.style.background = opt.swatch;
+        span.append(sw);
+      }
+      span.append(opt.label);
+      label.append(input, span);
+      return label;
+    }));
+  }
+  buildTiles($('coatTiles'), 'coat', COAT_OPTIONS, 'brown');
+  buildTiles($('breedTiles'), 'breed', BREED_OPTIONS, 'corgi');
+
+  function updatePreview() {
+    drawDog(preview, form.coat.value, form.breed.value);
+  }
+  form.addEventListener('change', updatePreview);
+
+  function makeCard(p) {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    const portrait = document.createElement('div');
+    portrait.className = 'portrait';
+    const canvas = document.createElement('canvas');
+    drawDog(canvas, p.coat, p.breed);
+    portrait.append(canvas);
+
+    const name = document.createElement('h3');
+    name.textContent = p.name; // textContent: safe even if a name contains HTML
+
+    const meta = document.createElement('p');
+    meta.className = 'meta';
+    meta.textContent = `${labelOf(COAT_OPTIONS, p.coat)} ${labelOf(BREED_OPTIONS, p.breed)}`;
+
+    card.append(portrait, name, meta);
+    return card;
+  }
+
+  function render(list) {
+    const ids = new Set(list.map((p) => p.id));
+    for (const [id, el] of shown) {
+      if (!ids.has(id)) {
+        el.remove();
+        shown.delete(id);
+      }
+    }
+    for (const p of list) {
+      if (!shown.has(p.id)) {
+        const el = makeCard(p);
+        shown.set(p.id, el);
+        grid.append(el);
+      }
+    }
+    $('count').textContent = `🐾 ${list.length} pup${list.length === 1 ? '' : 's'} joined`;
+    $('empty').hidden = list.length > 0;
+  }
+
+  async function loadParticipants() {
+    try {
+      const res = await fetch('/api/participants', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { participants } = await res.json();
+      render(participants);
+      $('status').textContent = '';
+    } catch (err) {
+      $('status').textContent = "Couldn't reach the guest list. Retrying...";
+    }
+  }
+
+  $('openJoin').addEventListener('click', () => {
+    $('formError').textContent = '';
+    updatePreview();
+    dialog.showModal();
+    $('pupName').focus();
+  });
+  $('cancelBtn').addEventListener('click', () => dialog.close());
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('formError').textContent = '';
+    const payload = {
+      name: $('pupName').value.trim(),
+      coat: form.coat.value,
+      breed: form.breed.value,
+    };
+    if (!payload.name) {
+      $('formError').textContent = 'Give your pup a name first 🐶';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Joining...';
+    try {
+      const res = await fetch('/api/participants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Could not join. Please try again.');
+      form.reset();
+      dialog.close();
+      await loadParticipants();
+    } catch (err) {
+      $('formError').textContent = err.message;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Join 🐾';
+    }
+  });
+
+  loadParticipants();
+  setInterval(loadParticipants, 15000);
+  </script>
+</body>
+</html>
